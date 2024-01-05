@@ -101,16 +101,16 @@ __host__ void MyGPU::conv_forward_gpu_caller(float *y, const float *x, const flo
     cudaMemcpy(d_k, k, M * C * K * K * sizeof(float), cudaMemcpyHostToDevice);
 
     // Define the grid and block dimensions
-    dim3 gridDim(W_out, H_out); // grid size is H_out * W_out
-    dim3 blockDim(B * M, 1); // block size is B * M
-    // int H_grid = ceil(1.0*H_out / TILE_WIDTH);
-    // int W_grid = ceil(1.0*W_out / TILE_WIDTH);
-    // int Z = H_grid * W_grid;
+    //dim3 gridDim(W_out, H_out); // grid size is H_out * W_out
+    //dim3 blockDim(B * M, 1); // block size is B * M
+    int H_grid = ceil(1.0*H_out / TILE_WIDTH);
+    int W_grid = ceil(1.0*W_out / TILE_WIDTH);
+    int Z = H_grid * W_grid;
 
-    // dim3 gridDim(TILE_WIDTH, TILE_WIDTH, 1);
+    dim3 gridDim(TILE_WIDTH, TILE_WIDTH, 1);
 
-    // // Grid Dimension = #of Blocks: Batch Size * Num_Output_Features *
-    // dim3 blockDim(B, M, Z);
+    // Grid Dimension = #of Blocks: Batch Size * Num_Output_Features *
+    dim3 blockDim(B, M, Z);
 
     // Launch the kernel
     conv_forward_gpu<<<gridDim, blockDim>>>(y, x, k, B, M, C, H, W, K, H_out, W_out);
