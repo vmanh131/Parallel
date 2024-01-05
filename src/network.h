@@ -46,10 +46,9 @@ class Network {
   void check_gradient(const Matrix& input, const Matrix& target, int n_points,
                       int seed = -1);
 
-  
+  /// Get the serialized layer parameters
   void save_parameters(std::string filename);
   void load_parameters(std::string filename);
-
 };
 
 #endif  // SRC_NETWORK_H_
