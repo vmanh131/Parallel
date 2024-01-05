@@ -53,7 +53,7 @@ __global__ void conv_forward_gpu(float *y, const float *x, const float *k, const
     
 
     // Store the output pixel value
-    y[(b * M + m) * H_out * W_out + h * W_out + w] = sum;
+    y[(bx * (M * H_out * W_out)) + (by * W_out * H_out) + h * W_out + w] = sum;
 }
 
 // __global__ void conv_forward_kernel(float *y, const float *x, const float *k, const int B, const int M, const int C, const int H, const int W, const int K)
