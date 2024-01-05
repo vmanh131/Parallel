@@ -2,7 +2,7 @@
 
 Network createNetwork_CPU()
 {
-    Network dnn;
+    Network dnn1;
 
     Layer *conv1 = new Conv_CPU(1, 28, 28, 6, 5, 5);
     Layer *pool1 = new MaxPooling(6, 24, 24, 2, 2, 2);
@@ -16,33 +16,33 @@ Network createNetwork_CPU()
     Layer *relu_fc1 = new ReLU;
     Layer *relu_fc2 = new ReLU;
     Layer *softmax = new Softmax;
-    dnn.add_layer(conv1);
-    dnn.add_layer(relu_conv1);
-    dnn.add_layer(pool1);
-    dnn.add_layer(conv2);
-    dnn.add_layer(relu_conv2);
-    dnn.add_layer(pool2);
-    dnn.add_layer(fc1);
-    dnn.add_layer(relu_fc1);
-    dnn.add_layer(fc2);
-    dnn.add_layer(relu_fc2);
-    dnn.add_layer(fc3);
-    dnn.add_layer(softmax);
+    dnn1.add_layer(conv1);
+    dnn1.add_layer(relu_conv1);
+    dnn1.add_layer(pool1);
+    dnn1.add_layer(conv2);
+    dnn1.add_layer(relu_conv2);
+    dnn1.add_layer(pool2);
+    dnn1.add_layer(fc1);
+    dnn1.add_layer(relu_fc1);
+    dnn1.add_layer(fc2);
+    dnn1.add_layer(relu_fc2);
+    dnn1.add_layer(fc3);
+    dnn1.add_layer(softmax);
 
     // loss
     Loss *loss = new CrossEntropy;
-    dnn.add_loss(loss);
+    dnn1.add_loss(loss);
 
     // load weitghts
 
    // dnn.load_parameters("./model/weights.bin");
 
-    return dnn;
+    return dnn1;
 }
 
 Network createNetwork_GPU()
 {
-    Network dnn;
+    Network dnn2;
 
     Layer *conv1 = new Conv_cust(1, 28, 28, 6, 5, 5);
     Layer *pool1 = new MaxPooling(6, 24, 24, 2, 2, 2);
@@ -56,26 +56,26 @@ Network createNetwork_GPU()
     Layer *relu_fc1 = new ReLU;
     Layer *relu_fc2 = new ReLU;
     Layer *softmax = new Softmax;
-    dnn.add_layer(conv1);
-    dnn.add_layer(relu_conv1);
-    dnn.add_layer(pool1);
-    dnn.add_layer(conv2);
-    dnn.add_layer(relu_conv2);
-    dnn.add_layer(pool2);
-    dnn.add_layer(fc1);
-    dnn.add_layer(relu_fc1);
-    dnn.add_layer(fc2);
-    dnn.add_layer(relu_fc2);
-    dnn.add_layer(fc3);
-    dnn.add_layer(softmax);
+    dnn2.add_layer(conv1);
+    dnn2.add_layer(relu_conv1);
+    dnn2.add_layer(pool1);
+    dnn2.add_layer(conv2);
+    dnn2.add_layer(relu_conv2);
+    dnn2.add_layer(pool2);
+    dnn2.add_layer(fc1);
+    dnn2.add_layer(relu_fc1);
+    dnn2.add_layer(fc2);
+    dnn2.add_layer(relu_fc2);
+    dnn2.add_layer(fc3);
+    dnn2.add_layer(softmax);
 
     // loss
     Loss *loss = new CrossEntropy;
-    dnn.add_loss(loss);
+    dnn2.add_loss(loss);
 
     // load weitghts
 
    // dnn.load_parameters("./model/weights.bin");
 
-    return dnn;
+    return dnn2;
 }

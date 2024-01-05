@@ -13,17 +13,24 @@ int main()
     std::cout << "mnist test number: " << dataset.test_labels.cols() << std::endl;
 
     std::cout << "Loading model...\n";
-    Network dnn = createNetwork_GPU();
 
-    float acc = 0.0;
+    float accuracy = 0.0;
 
-    dnn.load_parameters("./model/weights.bin");
-    dnn.forward(dataset.test_data);
- 
-    acc = compute_accuracy(dnn.output(), dataset.test_labels);
-    std::cout<<std::endl;
-    std::cout<<"Test Accuracy: "<<acc<< std::endl;
-    std::cout<<std::endl;
+     // 2. Host - CPU Network
+    std::cout << "Test: Host - CPU Network" << std::endl;
+    Network dnn1 = createNetwork_CPU();
+    dnn1.load_parameters("./model/weights-cpu-trained.bin");
+    dnn1.forward(dataset.test_data);
+    accuracy = compute_accuracy(dnn1.output(), dataset.test_labels);
+    std::cout << "test accuracy: " << accuracy << std::endl;
+    std::cout << "==============================" << std::endl;
+
+    // 3. Device - GPU Network
+    Network dnn2 = createNetwork_GPU();
+    dnn2.load_parameters("./model/weights-cpu-trained.bin");
+    dnn2.forward(dataset.test_data);
+    accuracy = compute_accuracy(dnn2.output(), dataset.test_labels);
+    std::cout << "test accuracy: " << accuracy << std::endl;
 
     return 0;
 
