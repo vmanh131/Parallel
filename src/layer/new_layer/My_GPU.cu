@@ -10,7 +10,7 @@ __global__ void conv_forward_gpu(float *y, const float *x, const float *k, const
     // Get the block and thread indices
     int bx = blockIdx.x; // block index along x-axis
     int by = blockIdx.y; // block index along y-axis
-    int bz = blockIdx.z
+    int bz = blockIdx.z;
     //int tx = threadIdx.x; // thread index within a block along x-axis
 
     int width_grid = ceil(1.0 * W_out / TILE_WIDTH);
@@ -39,10 +39,10 @@ __global__ void conv_forward_gpu(float *y, const float *x, const float *k, const
                     int j = w + q; // input pixel column
 
                     // Get the input pixel value
-                    float x_val = x[(b * C + c) * H * W + i * W + j];
+                    float x_val = x[bx * (C * H * W) + (c * H * W) + (i * W) + j];
 
                     // Get the filter coefficient
-                    float k_val = k[(m * C + c) * K * K + p * K + q];
+                    float k_val = k[by * (C * K * K) + (c * K * K) + (p * K) + q];
 
                     // Accumulate the product of the input pixel and the filter coefficient
                     sum += x_val * k_val;
