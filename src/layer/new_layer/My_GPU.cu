@@ -1,5 +1,6 @@
 #include "My_GPU.h"
-
+#include <cmath>
+#include <iostream>
 #include <cuda_runtime.h>
 
 #define TILE_WIDTH 16
@@ -9,41 +10,47 @@ __global__ void conv_forward_gpu(float *y, const float *x, const float *k, const
     // Get the block and thread indices
     int bx = blockIdx.x; // block index along x-axis
     int by = blockIdx.y; // block index along y-axis
-    int tx = threadIdx.x; // thread index within a block along x-axis
+    int bz = blockIdx.z
+    //int tx = threadIdx.x; // thread index within a block along x-axis
 
+    int width_grid = ceil(1.0 * W_out / TILE_WIDTH);
     // Calculate the output pixel coordinates
-    int h = by; // output pixel row
-    int w = bx; // output pixel column
+    int h = (bz / width_grid) * TILE_WIDTH + by; // output pixel row
+    int w = (bz % width_grid) * TILE_WIDTH + bx; // output pixel column
 
     // Calculate the input image and output feature map indices
-    int b = tx / M; // input image index
-    int m = tx % M; // output feature map index
+    //int b = tx / M; // input image index
+    //int m = tx % M; // output feature map index
 
     // Initialize the output pixel value to zero
     float sum = 0.0f;
 
     // Loop over the filter coefficients
-    for (int c = 0; c < C; c++)
+    if (h < H_out && w < W_out) 
     {
-        for (int p = 0; p < K; p++)
+        for (int c = 0; c < C; c++)
         {
-            for (int q = 0; q < K; q++)
+            for (int p = 0; p < K; p++)
             {
-                // Calculate the input pixel coordinates
-                int i = h + p; // input pixel row
-                int j = w + q; // input pixel column
+                for (int q = 0; q < K; q++)
+                {
+                    // Calculate the input pixel coordinates
+                    int i = h + p; // input pixel row
+                    int j = w + q; // input pixel column
 
-                // Get the input pixel value
-                float x_val = x[(b * C + c) * H * W + i * W + j];
+                    // Get the input pixel value
+                    float x_val = x[(b * C + c) * H * W + i * W + j];
 
-                // Get the filter coefficient
-                float k_val = k[(m * C + c) * K * K + p * K + q];
+                    // Get the filter coefficient
+                    float k_val = k[(m * C + c) * K * K + p * K + q];
 
-                // Accumulate the product of the input pixel and the filter coefficient
-                sum += x_val * k_val;
+                    // Accumulate the product of the input pixel and the filter coefficient
+                    sum += x_val * k_val;
+                }
             }
         }
     }
+    
 
     // Store the output pixel value
     y[(b * M + m) * H_out * W_out + h * W_out + w] = sum;
