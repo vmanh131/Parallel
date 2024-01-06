@@ -58,7 +58,7 @@ void trainModel(int n_epoch, int batch_size)
 
     dnn.load_parameters("./model/weights_cpu.bin");
     dnn.forward(dataset.test_data);
-    float accuracy = compute_accuracy(dnn.output(), dataset.test_labels);
+    accuracy = compute_accuracy(dnn.output(), dataset.test_labels);
     std::cout << "test accuracy: " << accuracy << std::endl;
     
 }
